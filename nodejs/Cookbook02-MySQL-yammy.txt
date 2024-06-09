@@ -762,4 +762,182 @@ app.get('/add',food.getAddPage);
 
 31. Edit add-food.ejs to make it to contain all the needed fields.
 
+<%- include('partials/header.ejs') %>
+    <div class="container">
+        <% if (message != '') { %>
+            <p class="text-center text-danger"><%= message %></p>
+        <% } %>
+        <form class="add-food-form" action="" method="post" enctype="multipart/form-data">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="foodName" id="food-name" placeholder="Food Name" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <select class="form-control" name="kosherType" id="kosher-type">
+                        <option selected disabled>-- Choose Kosher Type --</option>
+                        <option value="parve">Parve</option>
+                        <option value="milk">Milk</option>
+                        <option value="meat">Meat</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <select class="form-control" name="cuisine" id="cuisine">
+                        <option selected disabled>-- Choose Cuisine --</option>
+                        <option value="israeli">Israeli</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <input type="number" class="form-control" name="calories" id="calories" placeholder="Calories">
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="number" class="form-control" name="prepareTimeMin" id="prepare-time-min" placeholder="Prepare Time, min" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <textarea class="form-control" name="ingredients" id="ingredients" required>
+                        Ingredients
+                    </textarea>
+                </div>
+                <div class="form-group col-md-3">
+                    <select id="type-of-dish" name="typeOfDish" class="form-control">
+                        <option selected disabled>-- Choose Type of Dish --</option>
+                        <option value="dessert">Dessert</option>
+                        <option value="soup">Soup</option>
+                        <option value="main">Main</option>
+                        <option value="side dish">Side Dish</option>
+                        <option value="drink">Drink</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label for="food-img"><b>Food Image</b></label><br>
+                    <input type="file" name="image" id="food-img" class="" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary float-right">Add Food</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
 
+32. create new module: yummy/model/cuisine.js:
+
+module.exports = {
+
+    // Get the list of cuisines with their id
+    getCuisineList: (callback) => {
+
+        let querySQL = 'SELECT id, name FROM cuisine';
+
+        db.query(querySQL,(err,result) => {
+
+            if (err) {
+                console.log(err.message);
+                callback(err,[]);
+                return;
+            }
+
+            callback(err,result);
+
+        })
+
+    }
+
+
+}
+
+33. Use the above function to get the list of all the cuisines and their id
+for presenting them in <select> in the form of "Add Food":
+yummy/model/food.js:
+
+const cuisine = require('./cuisine');
+
+module.exports = {
+
+    getAddPage: (req, res) => {
+
+        cuisine.getCuisineList((err,result) => {
+
+            if (err) {
+                return res.status(500).send(err.message);
+            }
+
+            res.render('add-food.ejs', {
+                title: 'Add | Yummy',
+                message: '',
+                cuisines: result
+            })
+
+        })
+
+    }
+
+}
+
+34. Add <option>s to the <select> in the template add-food.ejs:
+
+<%- include('partials/header.ejs') %>
+    <div class="container">
+        <% if (message != '') { %>
+            <p class="text-center text-danger"><%= message %></p>
+        <% } %>
+        <form class="add-food-form" action="" method="post" enctype="multipart/form-data">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="foodName" id="food-name" placeholder="Food Name" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <select class="form-control" name="kosherType" id="kosher-type">
+                        <option selected disabled>-- Choose Kosher Type --</option>
+                        <option value="parve">Parve</option>
+                        <option value="milk">Milk</option>
+                        <option value="meat">Meat</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <select class="form-control" name="cuisine" id="cuisine">
+                        <option selected disabled>-- Choose Cuisine --</option>
+                        <% cuisines.forEach((cuisine, index) => { %>
+                            <option value="<%= cuisine.id %>"><%= cuisine.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <input type="number" class="form-control" name="calories" id="calories" placeholder="Calories">
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="number" class="form-control" name="prepareTimeMin" id="prepare-time-min" placeholder="Prepare Time, min" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <textarea class="form-control" name="ingredients" id="ingredients" required>
+                        Ingredients
+                    </textarea>
+                </div>
+                <div class="form-group col-md-3">
+                    <select id="type-of-dish" name="typeOfDish" class="form-control">
+                        <option selected disabled>-- Choose Type of Dish --</option>
+                        <option value="dessert">Dessert</option>
+                        <option value="soup">Soup</option>
+                        <option value="main">Main</option>
+                        <option value="side dish">Side Dish</option>
+                        <option value="drink">Drink</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label for="food-img"><b>Food Image</b></label><br>
+                    <input type="file" name="image" id="food-img" class="" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary float-right">Add Food</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+35. Check now that you see the <select> with all it's <option>s
+
+36. 

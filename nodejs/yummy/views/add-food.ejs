@@ -19,7 +19,9 @@
                 <div class="form-group col-md-4">
                     <select class="form-control" name="cuisine" id="cuisine">
                         <option selected disabled>-- Choose Cuisine --</option>
-                        <option value="israeli">Israeli</option>
+                        <% cuisines.forEach((cuisine, index) => { %>
+                            <option value="<%= cuisine.id %>"><%= cuisine.name %></option>
+                        <% }) %>
                     </select>
                 </div>
             </div>

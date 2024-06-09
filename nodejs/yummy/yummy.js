@@ -5,6 +5,7 @@ require('ejs');
 const fs = require('fs');
 
 const home = require('./model/home');
+const food = require('./model/food');
 
 /********** VARIABLES **********/
 let port = process.env.PORT ? process.env.PORT : 3053;
@@ -48,6 +49,8 @@ app.use(express.static(path.join(__dirname,'static')));
 // GET - HTTP method, that asks to bring some
 // data or page, sometimes, in accordance to parameters
 app.get('/',home.getHomePage);
+
+app.get('/add',food.getAddPage);
 
 /*********LISTENER *********/
 app.listen(port, () => {

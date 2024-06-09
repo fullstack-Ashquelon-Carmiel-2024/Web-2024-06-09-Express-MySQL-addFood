@@ -607,3 +607,159 @@ const app = express();
 
 (get data from yummy.food):
 
+module.exports = {
+
+  getHomePage: (req,res) => {
+
+    let querySQL = 'SELECT * FROM food';
+
+    db.query(querySQL,(err, result) => {
+
+      if (err) {
+
+        console.log(err.message);
+        return res.status(500).send(`<h1>ERROR: ${err.message} \n
+             while performing \n
+             ${querySQL}</h1>`);
+
+      }
+
+      // Controller (we've got it here close to the Model)
+      res.render('index.ejs', {
+        title: 'Yummy',
+        food: result
+      })
+
+    })
+
+  },
+  
+  getSampleHomePage: (req,res) => {
+
+    res.render('index.ejs',
+      {title: 'Yummy',
+       food: [ 
+        {
+         id: 1,
+         name: 'chumus masbacha',
+         kosher_type: 'parve',
+         cuisine_id: 1,
+         image: 'chummus-masbacha.jpg', 
+         calories: 550, 
+         prepare_time_min: 120, 
+         ingredients: 'chumus, tchina, oil',  
+         type_of_dish: 'main'
+        },
+        {
+         id: 2,
+         name: 'sushi',
+         kosher_type: 'parve',
+         cuisine_id: 2,
+         image: 'sushi.jpeg',
+         calories: 250, 
+         prepare_time_min: 90, 
+         ingredients: 'rice, nuri, avocado',  
+         type_of_dish: 'main'
+        }
+       ]
+      })
+
+  },
+
+  getSmallHomePage: (req,res) => {
+
+    res.render('small-index.ejs',
+      {title: 'Yummy'})
+
+  }
+
+}
+
+28. Rename views/add-player.ejs to views/add-food.ejs
+    and view/edit-player.ejs to view/edit-food.ejs
+
+29. Edit add-food.ejs - replace "player" by "food":
+
+<%- include('partials/header.ejs') %>
+    <div class="container">
+        <% if (message != '') { %>
+            <p class="text-center text-danger"><%= message %></p>
+        <% } %>
+        <form class="add-food-form" action="" method="post" enctype="multipart/form-data">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="first_name" id="first-name" placeholder="First Name" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="last_name" id="last-name" placeholder="Last Name" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input type="number" class="form-control" name="number" id="number" placeholder="Number" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <select id="position" name="position" class="form-control" required>
+                        <option selected disabled>Choose position</option>
+                        <option>Goalkeeper</option>
+                        <option>Defender</option>
+                        <option>Midfielder</option>
+                        <option>Forward</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label for="food-img"><b>Food Image</b></label><br>
+                    <input type="file" name="image" id="food-img" class="" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary float-right">Add Food</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+30. Create yummy/model/food.js
+
+module.exports = {
+
+    getAddPage: (req, res) => {
+
+        res.render('add-food.ejs', {
+            title: 'Add | Yummy',
+            message: ''
+        })
+
+    }
+
+}
+
+31. Import it into yummy.js and add to the routing:
+
+const express = require('express');
+const mysql = require('mysql2');
+const path = require('path');
+require('ejs');
+const fs = require('fs');
+
+const home = require('./model/home');
+const food = require('./model/food');
+
+/********** VARIABLES **********/
+
+..................................
+
+
+/******* ROUTING *********/
+// GET - HTTP method, that asks to bring some
+// data or page, sometimes, in accordance to parameters
+app.get('/',home.getHomePage);
+
+app.get('/add',food.getAddPage);
+
+31. Edit add-food.ejs to make it to contain all the needed fields.
+
+

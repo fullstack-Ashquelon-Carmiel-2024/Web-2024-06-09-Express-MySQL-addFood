@@ -9,7 +9,7 @@
                     <input type="text" class="form-control" name="foodName" id="food-name" placeholder="Food Name" required>
                 </div>
                 <div class="form-group col-md-4">
-                    <select class="form-control" name="kosherType" id="kosher-type" required>
+                    <select class="form-control" name="kosherType" id="kosher-type">
                         <option selected disabled>-- Choose Kosher Type --</option>
                         <option value="parve">Parve</option>
                         <option value="milk">Milk</option>
@@ -17,23 +17,32 @@
                     </select>
                 </div>
                 <div class="form-group col-md-4">
-                    <select class="form-control" name="cuisine" id="cuisine" required>
+                    <select class="form-control" name="cuisine" id="cuisine">
                         <option selected disabled>-- Choose Cuisine --</option>
                         <option value="israeli">Israeli</option>
                     </select>
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
-                    <input type="number" class="form-control" name="number" id="number" placeholder="Number" required>
+                <div class="form-group col-md-3">
+                    <input type="number" class="form-control" name="calories" id="calories" placeholder="Calories">
                 </div>
-                <div class="form-group col-md-6">
-                    <select id="position" name="position" class="form-control" required>
-                        <option selected disabled>Choose position</option>
-                        <option>Goalkeeper</option>
-                        <option>Defender</option>
-                        <option>Midfielder</option>
-                        <option>Forward</option>
+                <div class="form-group col-md-3">
+                    <input type="number" class="form-control" name="prepareTimeMin" id="prepare-time-min" placeholder="Prepare Time, min" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <textarea class="form-control" name="ingredients" id="ingredients" required>
+                        Ingredients
+                    </textarea>
+                </div>
+                <div class="form-group col-md-3">
+                    <select id="type-of-dish" name="typeOfDish" class="form-control">
+                        <option selected disabled>-- Choose Type of Dish --</option>
+                        <option value="dessert">Dessert</option>
+                        <option value="soup">Soup</option>
+                        <option value="main">Main</option>
+                        <option value="side dish">Side Dish</option>
+                        <option value="drink">Drink</option>
                     </select>
                 </div>
                 <div class="col-md-12">

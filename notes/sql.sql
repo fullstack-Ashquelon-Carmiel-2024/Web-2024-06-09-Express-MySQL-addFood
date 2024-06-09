@@ -30,3 +30,15 @@ Our clients for MySQL are:
    tirgol.js
 
 */
+/* 
+SQL COMMAND TYPES
+
+QUERY - שאילתה - SELECT
+!!!!! DOES NOT CHANGE NOT THE STRUCTURE AND NOT THE DATA, ONLY SHOWS THE DATA !!!!!
+
+INSERT, DELETE, UPDATE, MERGE (אם השורה כבר קיימת, רק לעדכן) - DML
+- DATA MODIFICATION LANGUAGE - שינוי נתונים
+
+CREATE, DROP, ALTER - DDL - DATA DEFINITION LANGUAGE - משנה את המבנה (מגדיר את הנתונים)
+
+*/

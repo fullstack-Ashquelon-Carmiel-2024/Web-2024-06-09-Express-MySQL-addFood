@@ -42,6 +42,25 @@ CREATE TABLE customers (
   CONSTRAINT customers_ibfk_1 FOREIGN KEY (salesRepEmployeeNumber) REFERENCES employees (employeeNumber)*/
 ) ;
 
+CREATE TABLE customers (
+  customerNumber INT NOT NULL,
+  customerName VARCHAR(50) NOT NULL,
+  contactLastName VARCHAR(50) NOT NULL,
+  contactFirstName VARCHAR(50) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  addressLine1 VARCHAR(50) NOT NULL,
+  addressLine2 VARCHAR(50) DEFAULT NULL,
+  city VARCHAR(50) NOT NULL,
+  state VARCHAR(50) DEFAULT NULL,
+  postalCode VARCHAR(15) DEFAULT NULL,
+  country VARCHAR(50) NOT NULL,
+  salesRepEmployeeNumber INT DEFAULT NULL,
+  creditLimit DECIMAL(10,2) DEFAULT NULL,
+  PRIMARY KEY (customerNumber),
+  KEY salesRepEmployeeNumber (salesRepEmployeeNumber)
+) ;
+
+
 -- OPTION 1 - all the fields
 INSERT INTO customers(customerNumber,customerName,
       contactLastName,contactFirstName,phone,
@@ -333,3 +352,92 @@ VALUES
 
 SELECT * FROM customers
 WHERE contactLastName = 'King';
+
+SELECT customerNumber, customerName, contactLastName, contactFirstName, creditLimit
+FROM customers
+WHERE creditLimit BETWEEN 103800 AND 136800 AND customerNumber < 300;
+/* BETWEEN AND - range operator, also includes the edges */
+
+SELECT customerNumber, customerName, contactLastName, contactFirstName, creditLimit
+FROM customers
+WHERE creditLimit BETWEEN 103800 AND 136800 AND customerNumber < 300
+    AND contactLastName BETWEEN 'A' AND 'P';
+
+/* Get columns customerNumber, phone, city, state, salesRepEmployeeNumber
+when city name will be in the range 'C' till 'P' and salesRepEmployeeNumber will be in the range from 1300 till 1600*/
+SELECT customerNumber, phone, city, state, salesRepEmployeeNumber
+FROM customers
+WHERE city BETWEEN 'C' AND 'Q' AND salesRepEmployeeNumber BETWEEN 1300 AND 1600;
+
+-- 'P' < 'Paris' < 'Philadelphia'
+
+SELECT customerNumber, phone, city, state, salesRepEmployeeNumber
+FROM customers
+WHERE city BETWEEN 'C' AND 'Q' AND salesRepEmployeeNumber BETWEEN 1300 AND 1600
+ORDER BY city;
+
+-- 'P' < 'Paris' < 'Philadelphia'
+-- DEFAULT ORDER is ASCENDING ('a','b','c', ....or 1,2,3) - ASC
+
+SELECT customerNumber, phone, city, state, salesRepEmployeeNumber
+FROM customers
+WHERE city BETWEEN 'C' AND 'Q' AND salesRepEmployeeNumber BETWEEN 1300 AND 1600
+ORDER BY city ASC; -- The same result
+
+SELECT customerNumber, phone, city, state, salesRepEmployeeNumber
+FROM customers
+WHERE city BETWEEN 'C' AND 'Q' AND salesRepEmployeeNumber BETWEEN 1300 AND 1600
+ORDER BY city DESC;
+
+-- 'P' < 'Paris' < 'Philadelphia'
+-- DEFAULT ORDER is ASCENDING ('a','b','c', ....or 1,2,3) - ASC סדר עולה
+-- THE SECOND OPTION - DESCENDING - DESC
+
+SELECT customerNumber, phone, city, state, salesRepEmployeeNumber
+FROM customers
+WHERE city BETWEEN 'C' AND 'Q' AND salesRepEmployeeNumber BETWEEN 1300 AND 1600
+ORDER BY city DESC, customerNumber;
+-- The primary order is BY city DESC
+-- The secondary order is BY customerNumber ASC
+
+/* MISSION: order by salesRepEpmployeeNumber, and after that - by contactLastName
+ in the descending order */
+
+SELECT customerNumber, contactFirstName, contactLastName,city,country,salesRepEmployeeNumber
+FROM customers
+-- WHERE city BETWEEN 'C' AND 'Q' AND salesRepEmployeeNumber BETWEEN 1300 AND 1600
+ORDER BY salesRepEmployeeNumber, contactLastName DESC;
+
+/* 
+1. When ORDER BY we can ask to put all the NULLS before or AFTER
+2. ORDER BY could be done by several columns
+3. Column in ORDER BY could not appear in SELECT (the same about the condition in WHERE)
+4. ORDER BY does not change the ORDER of the rows inside the DB
+*/
+
+SELECT customerNumber, contactFirstName, contactLastName,city,country,salesRepEmployeeNumber
+FROM customers
+WHERE contactLastName LIKE 'Ta%'
+ORDER BY city;
+
+SELECT customerNumber, contactFirstName, contactLastName,city,country,salesRepEmployeeNumber
+FROM customers
+WHERE contactLastName LIKE 'Ta%'
+ORDER BY city;
+
+SELECT customerNumber, contactFirstName, contactLastName,city,country,salesRepEmployeeNumber
+FROM customers
+WHERE city IN ('Paris','London','North Sidney','Cambridge','Nantes')
+ORDER BY city;
+
+SELECT customerNumber AS customer_number, 
+CONCAT_WS(' ','Dear Mr/Ms,',contactFirstName, contactLastName) AS full_name,
+city,country,
+(creditLimit+20)*2 credit_limit_calc, ROUND(creditLimit/3,2) AS credit_limit_third
+FROM customers
+WHERE city IN ('Paris','London','North Sidney','Cambridge','Nantes')
+ORDER BY city;
+-- ALIAS - שם נרדף למשהו, במקרה הזה, לעמודה
+
+
+
